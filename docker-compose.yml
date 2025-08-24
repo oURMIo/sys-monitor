@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  monitor:
+    image: debian:bullseye-slim
+    container_name: system-monitor
+    volumes:
+      - ./output:/output
+    command: sh -c "apt-get update && apt-get install -y procps iproute2 net-tools coreutils && sh /monitor.sh"
+    volumes:
+      - ./monitor.sh:/monitor.sh:ro
+      - ./output:/output
+
+  web:
+    image: nginx:alpine
+    container_name: system-monitor-web
+    volumes:
+      - ./output:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
